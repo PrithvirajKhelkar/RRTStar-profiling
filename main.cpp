@@ -22,7 +22,7 @@ bool isStateValid(const ob::State* state)
 
 int main()
 {
-    img = imread("rrt.png");
+    img = imread("map.png");
 
     if (img.empty()) {
         std::cerr << "Error: Unable to load the image." << std::endl;
@@ -36,11 +36,11 @@ int main()
     auto ss = std::make_shared<og::SimpleSetup>(space);
 
     ob::ScopedState<> start(ss->getStateSpace());
-    start[0] = 0;
-    start[1] = 0;
+    start[0] = 20;
+    start[1] = 20;
     ob::ScopedState<> goal(ss->getStateSpace());
-    goal[0] = 300;
-    goal[1] = 400;
+    goal[0] = 780;
+    goal[1] = 560;
     ss->setStartAndGoalStates(start, goal);
 
     ss->setStateValidityChecker(isStateValid);

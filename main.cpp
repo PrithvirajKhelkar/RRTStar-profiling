@@ -13,6 +13,18 @@ using namespace cv;
 
 Mat img;
 
+//  START COORDINATES:
+// x
+int start_x = 20;
+// y
+int start_y = 20;
+
+// GOAL COORDINATES:
+// x
+int goal_x = 780;
+// y
+int goal_y = 560;
+
 bool isStateValid(const ob::State* state)
 {
     const int w = std::min(static_cast<int>(state->as<ob::RealVectorStateSpace::StateType>()->values[0]), img.cols - 1);
@@ -36,11 +48,11 @@ int main()
     auto ss = std::make_shared<og::SimpleSetup>(space);
 
     ob::ScopedState<> start(ss->getStateSpace());
-    start[0] = 20;
-    start[1] = 20;
+    start[0] = start_x;
+    start[1] = start_y;
     ob::ScopedState<> goal(ss->getStateSpace());
-    goal[0] = 780;
-    goal[1] = 560;
+    goal[0] = goal_x;
+    goal[1] = goal_y;
     ss->setStartAndGoalStates(start, goal);
 
     ss->setStateValidityChecker(isStateValid);

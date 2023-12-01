@@ -19,11 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="Robot.cpp" />
     <ClCompile Include="simpleRRTStar.cpp" />
+    <ClCompile Include="World.cpp" />
+    <ClCompile Include="WorldObject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine.h" />
+    <ClInclude Include="globals.h" />
+    <ClInclude Include="Obstacle.h" />
+    <ClInclude Include="Robot.h" />
     <ClInclude Include="simpleRRTStar.h" />
+    <ClInclude Include="World.h" />
+    <ClInclude Include="WorldObject.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -3,6 +3,14 @@
 WorldObject::WorldObject(int x, int y, int vx, int vy, int width, int height, Uint8 r, Uint8 g, Uint8 b)
     : x(x), y(y), vx(vx), vy(vy), width(width), height(height), color({ r, g, b }) {}
 
+int WorldObject::getX() const {
+    return x;
+}
+
+int WorldObject::getY() const {
+    return y;
+}
+
 int WorldObject::getVx() const {
     return vx;
 }
@@ -18,6 +26,13 @@ void WorldObject::setVx(int newVx) {
 void WorldObject::setVy(int newVy) {
     vy = newVy;
 }
+
+int WorldObject::getWidth() const {
+    return width;
+};
+int WorldObject::getHeight() const {
+    return height;
+};
 
 void WorldObject::render(SDL_Renderer* renderer) const {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);

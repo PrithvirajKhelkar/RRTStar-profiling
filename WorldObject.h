@@ -12,10 +12,14 @@ public:
     WorldObject(int x, int y, int vx, int vy, int width, int height, Uint8 r, Uint8 g, Uint8 b);
     virtual ~WorldObject() = default;
 
+    int getX() const;
+    int getY() const;
     int getVx() const;
     int getVy() const;
     void setVx(int newVx);
     void setVy(int newVy);
+    int getWidth() const;
+    int getHeight() const;
 
     virtual void update(std::vector<std::shared_ptr<WorldObject>> allObjects) = 0;
     virtual void render(SDL_Renderer* renderer) const;

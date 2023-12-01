@@ -15,10 +15,7 @@
 
 bool initialize();
 void close();
-void addWorldObject(std::shared_ptr<WorldObject> object);
 void handleEvents(SDL_Event& e, bool& quit);
-void update();
-void render();
 void gameLoop();
 void startEngine();
 

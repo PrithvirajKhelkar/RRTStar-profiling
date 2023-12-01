@@ -8,7 +8,7 @@
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
-const int OBSTACLE_WIDTH = 50;
+const int OBSTACLE_WIDTH = 75;
 const int OBSTACLE_HEIGHT = 200;
 
 #endif GLOBALS_H

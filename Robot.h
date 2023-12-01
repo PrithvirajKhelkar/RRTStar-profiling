@@ -29,10 +29,17 @@ public:
 
     void render(SDL_Renderer* renderer) const override;
 
+    bool RobotCollision(std::vector<std::shared_ptr<WorldObject>> allObjects, int dx, int dy);
+
+    std::function<bool(const ompl::base::State*)> getStateValidityCheckerFunction(std::vector<std::shared_ptr<WorldObject>> allObjects);
+
+    void setAllObjects(std::vector<std::shared_ptr<WorldObject>> _allObjects);
+
 private:
     std::thread myThread;
     bool isRunning;
-    ompl::geometric::PathGeometric* path;
+    std::vector<std::vector<int>> solution;
+    std::vector<std::shared_ptr<WorldObject>> allObjects;
 };
 
 #endif // ROBOT_H

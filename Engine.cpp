@@ -61,9 +61,10 @@ void startEngine() {
         return;
     }
 
-    world.addWorldObject(std::make_shared<Obstacle>(200, 200, 0, 2, OBSTACLE_WIDTH, OBSTACLE_HEIGHT, 255, 0, 0));
-    world.addWorldObject(std::make_shared<Obstacle>(400, 100, 0, -2, OBSTACLE_WIDTH, OBSTACLE_HEIGHT, 255, 0, 0));
-    //addWorldObject(std::make_shared<Obstacle>(300, 200, -2, 1, SQUARE_SIZE, SQUARE_SIZE, 0, 0, 255));
+    world.addWorldObject(std::make_shared<Obstacle>(200, 200, 0, 1, OBSTACLE_WIDTH, OBSTACLE_HEIGHT, 255, 0, 0));
+    world.addWorldObject(std::make_shared<Obstacle>(400, 100, 0, -1, OBSTACLE_WIDTH, OBSTACLE_HEIGHT, 255, 0, 0));
+    
+    world.addWorldObject(std::make_shared<Robot>(10, 10, 0, 0, 10, 10, 0, 255, 0));
 
     gameLoop();
     close();

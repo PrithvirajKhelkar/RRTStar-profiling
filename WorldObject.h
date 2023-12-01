@@ -2,6 +2,9 @@
 #ifndef WORLD_OBJECT_H
 #define WORLD_OBJECT_H
 
+#include <vector>
+#include <memory>
+
 #include "globals.h"
 
 class WorldObject {
@@ -14,7 +17,7 @@ public:
     void setVx(int newVx);
     void setVy(int newVy);
 
-    virtual void move() = 0;
+    virtual void update(std::vector<std::shared_ptr<WorldObject>> allObjects) = 0;
     virtual void render(SDL_Renderer* renderer) const;
 
     bool checkBoundaryCollision() const;

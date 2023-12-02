@@ -50,7 +50,7 @@ void gameLoop() {
         world.update();
         world.render(renderer);
 
-        SDL_Delay(100);
+        SDL_Delay(200);
     }
 }
 
@@ -61,7 +61,7 @@ void startEngine() {
         return;
     }
 
-    world.addWorldObject(std::make_shared<Obstacle>(200, 100, 0, -1, OBSTACLE_WIDTH, OBSTACLE_HEIGHT, 255, 0, 0));
+    world.addWorldObject(std::make_shared<Obstacle>(200, 100, 0, -2, OBSTACLE_WIDTH, OBSTACLE_HEIGHT, 255, 0, 0));
     world.addWorldObject(std::make_shared<Obstacle>(400, 100, 0, 0, OBSTACLE_WIDTH, OBSTACLE_HEIGHT, 255, 0, 0));
     
     world.addWorldObject(std::make_shared<Robot>(10, 10, 0, 0, 10, 10, 0, 255, 0));

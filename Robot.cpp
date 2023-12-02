@@ -95,7 +95,6 @@ void Robot::update(std::vector<std::shared_ptr<WorldObject>> allObjects) {
     
     setAllObjects(allObjects);
 
-   // simpleSetup->setStateValidityChecker(getStateValidityCheckerFunction(allObjects));
 
 }
 

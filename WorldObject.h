@@ -7,10 +7,17 @@
 
 #include "globals.h"
 
+enum WorldObjectType {
+    ROBOT,
+    OBSTACLE
+};
+
 class WorldObject {
 public:
-    WorldObject(int x, int y, int vx, int vy, int width, int height, Uint8 r, Uint8 g, Uint8 b);
+    WorldObject(int x, int y, int vx, int vy, int width, int height, Uint8 r, Uint8 g, Uint8 b, WorldObjectType objectType);
     virtual ~WorldObject() = default;
+
+
 
     int getX() const;
     int getY() const;
@@ -20,13 +27,17 @@ public:
     void setVy(int newVy);
     int getWidth() const;
     int getHeight() const;
+    WorldObjectType getObjectType() const;
 
     virtual void update(std::vector<std::shared_ptr<WorldObject>> allObjects) = 0;
     virtual void render(SDL_Renderer* renderer) const;
 
     bool checkBoundaryCollision() const;
 
+    bool collidesWith(int dx, int dy);
+
 protected:
+    WorldObjectType objectType;
     int x, y;
     int vx, vy;
     int width, height;

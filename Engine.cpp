@@ -50,7 +50,7 @@ void gameLoop() {
         world.update();
         world.render(renderer);
 
-        SDL_Delay(200);
+        SDL_Delay(100);
     }
 }
 

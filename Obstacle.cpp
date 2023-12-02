@@ -1,7 +1,8 @@
 #include "Obstacle.h"
 
 Obstacle::Obstacle(int x, int y, int vx, int vy, int width, int height, Uint8 r, Uint8 g, Uint8 b)
-    : WorldObject(x, y, vx, vy, width, height, r, g, b) {}
+    : WorldObject(x, y, vx, vy, width, height, r, g, b, OBSTACLE) {
+}
 
 void Obstacle::update(std::vector<std::shared_ptr<WorldObject>> allObjects) {
     x += getVx();

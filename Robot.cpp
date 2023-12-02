@@ -2,15 +2,43 @@
 #include <mutex>
 
 std::mutex solutionMutex;
+std::shared_ptr<ompl::geometric::SimpleSetup> simpleSetup;
+
+// Define the state space for 2D position
+class RobotStateSpace : public ompl::base::RealVectorStateSpace {
+public:
+    RobotStateSpace() : ompl::base::RealVectorStateSpace(2) {
+        setName("RobotStateSpace");
+    }
+};
+
+// Define the state validity checker with a vector of obstacles
+
+
+class RobotValidityChecker : public ompl::base::StateValidityChecker {
+public:
+    RobotValidityChecker(const ompl::base::SpaceInformationPtr& si, std::vector<std::shared_ptr<WorldObject>> obstacles)
+        : ompl::base::StateValidityChecker(si), obstacles(obstacles) {}
+
+    bool isValid(const ompl::base::State* state) const override {
+        // Check validity with respect to all obstacles
+        const int dx = std::min(static_cast<int>(state->as<ompl::base::RealVectorStateSpace::StateType>()->values[0]), SCREEN_WIDTH);
+        const int dy = std::min(static_cast<int>(state->as<ompl::base::RealVectorStateSpace::StateType>()->values[1]), SCREEN_HEIGHT);
+
+        for (const auto& obstacle : obstacles) {
+            if (obstacle->getObjectType() == OBSTACLE && obstacle->collidesWith(dx, dy)) {
+                return false; // Collision with obstacle
+            }
+        }
+        return true; // State is valid
+    }
+
+private:
+    std::vector<std::shared_ptr<WorldObject>> obstacles;
+};
 
 Robot::Robot(int x, int y, int vx, int vy, int width, int height, Uint8 r, Uint8 g, Uint8 b)
-    : WorldObject(x, y, vx, vy, width, height, r, g, b), isRunning(false) {
-
-    isRunning = true;
-
-    startThread();
-
-}
+    : WorldObject(x, y, vx, vy, width, height, r, g, b, ROBOT), isRunning(false) {}
 
 Robot::~Robot() {
     stopThread();
@@ -19,51 +47,46 @@ Robot::~Robot() {
 void Robot::initialize(std::vector<std::shared_ptr<WorldObject>> _allObjects) {
     isRunning = true;
 
-    std::cout << "came here" << std::endl;
+    auto space = std::make_shared<ompl::base::RealVectorStateSpace>();
+    space->addDimension(0.0, SCREEN_WIDTH);
+    space->addDimension(0.0, SCREEN_HEIGHT);
+
+    simpleSetup = std::make_shared<ompl::geometric::SimpleSetup>(space);
+
+    // Create the validity checker with obstacles
+    auto validityChecker = std::make_shared<RobotValidityChecker>(simpleSetup->getSpaceInformation(), _allObjects);
+    simpleSetup->setStateValidityChecker(validityChecker);
+
+    // Set start and goal states
+    ompl::base::ScopedState<> start(simpleSetup->getStateSpace());
+    start[0] = getX();
+    start[1] = getY();
+    ompl::base::ScopedState<> goal(simpleSetup->getStateSpace());
+    goal[0] = SCREEN_WIDTH - 10;
+    goal[1] = SCREEN_HEIGHT - 10;
+    simpleSetup->setStartAndGoalStates(start, goal);
+
+
+    // Set up optimization objective
+    ompl::base::OptimizationObjectivePtr objective = std::make_shared<ompl::base::PathLengthOptimizationObjective>(simpleSetup->getSpaceInformation());
+    simpleSetup->setOptimizationObjective(objective);
+
+    // Set the planner (RRT*)
+    auto planner = std::make_shared<ompl::geometric::RRTstar>(simpleSetup->getSpaceInformation());
+    simpleSetup->setPlanner(planner);
+
+    startThread();
+    
 }
 
 void Robot::solver() {
     while (isRunning) {
         try {
-            auto space = std::make_shared<ompl::base::RealVectorStateSpace>();
-            std::shared_ptr<ompl::geometric::SimpleSetup> simpleSetup;
-
-            space->addDimension(0.0, SCREEN_WIDTH);
-            space->addDimension(0.0, SCREEN_HEIGHT);
-
-            simpleSetup = std::make_shared<ompl::geometric::SimpleSetup>(space);
-
-            // Set start and goal states
-            ompl::base::ScopedState<> start(simpleSetup->getStateSpace());
-            start[0] = getX();
-            start[1] = getY();
-            ompl::base::ScopedState<> goal(simpleSetup->getStateSpace());
-            goal[0] = SCREEN_WIDTH - 10;
-            goal[1] = SCREEN_HEIGHT - 10;
-            simpleSetup->setStartAndGoalStates(start, goal);
-
-
-            // Set state validity checker
-            /* simpleSetup->setStateValidityChecker([](const ompl::base::State* state) {
-                return true;
-                });
-            */
-            simpleSetup->setStateValidityChecker(getStateValidityCheckerFunction(allObjects));
-
-            space->setup();
-            simpleSetup->getSpaceInformation()->setStateValidityCheckingResolution(1.0 / space->getMaximumExtent());
-
-            // Set up optimization objective
-            ompl::base::OptimizationObjectivePtr objective = std::make_shared<ompl::base::PathLengthOptimizationObjective>(simpleSetup->getSpaceInformation());
-            simpleSetup->setOptimizationObjective(objective);
-
-            // Set the planner (RRT*)
-            auto planner = std::make_shared<ompl::geometric::RRTstar>(simpleSetup->getSpaceInformation());
-            simpleSetup->setPlanner(planner);
-
-            simpleSetup->solve();
+            
+            ompl::base::PlannerStatus solved = simpleSetup->solve();
 
             ompl::geometric::PathGeometric& path = simpleSetup->getSolutionPath();
+
             path.interpolate();
 
             // Lock the mutex before modifying the shared resource (solution vector)
@@ -72,6 +95,11 @@ void Robot::solver() {
             solution.clear();
 
             for (std::size_t i = 0; i < path.getStateCount(); ++i) {
+                if (!simpleSetup->getStateValidityChecker()->isValid(path.getState(i))) {
+                    simpleSetup->clear();
+                    break;
+                }
+
                 solution.push_back({static_cast<int>(path.getState(i)->as<ompl::base::RealVectorStateSpace::StateType>()->values[0]),
                                     static_cast<int>(path.getState(i)->as<ompl::base::RealVectorStateSpace::StateType>()->values[1])});
             }
@@ -98,15 +126,9 @@ void Robot::stopThread() {
 void Robot::update(std::vector<std::shared_ptr<WorldObject>> allObjects) {
     // Implement robot-specific movement logic if needed
     // For now, the function is empty as an example
-    std::cout << "came here first" << std::endl;
     if (!isRunning) {
-        std::cout << "came here second" << std::endl;
         initialize(allObjects);
     }
-    
-    setAllObjects(allObjects);
-
-
 }
 
 void Robot::render(SDL_Renderer* renderer) const {
@@ -130,36 +152,4 @@ void Robot::render(SDL_Renderer* renderer) const {
         }
     }
     
-}
-
-bool Robot::RobotCollision(std::vector<std::shared_ptr<WorldObject>> allObjects, int dx = 0, int dy = 0) {
-    int r_x = x + dx;
-    int r_y =  y + dy;
-
-    for (const auto& obj : allObjects) {
-        if (this != obj.get()) {
-            if (r_x < obj->getX() + obj->getWidth() &&
-                r_x + width > obj->getX() &&
-                r_y < obj->getY() + obj->getHeight() &&
-                r_y + height > obj->getY()) {
-                return false;
-            }
-
-        }
-    }
-
-    return true;
-}
-
-std::function<bool(const ompl::base::State*)> Robot::getStateValidityCheckerFunction(std::vector<std::shared_ptr<WorldObject>> allObjects) {
-    return [this, allObjects](const ompl::base::State* state) -> bool {
-        const int dx = std::min(static_cast<int>(state->as<ompl::base::RealVectorStateSpace::StateType>()->values[0]), SCREEN_WIDTH);
-        const int dy = std::min(static_cast<int>(state->as<ompl::base::RealVectorStateSpace::StateType>()->values[1]), SCREEN_HEIGHT);
-
-        return RobotCollision(allObjects, dx, dy);
-        };
-}
-
-void Robot::setAllObjects(std::vector<std::shared_ptr<WorldObject>> _allObjects) {
-    allObjects.assign(_allObjects.begin(), _allObjects.end());
 }

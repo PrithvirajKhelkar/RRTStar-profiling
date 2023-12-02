@@ -1,7 +1,7 @@
 #include "WorldObject.h"
 
-WorldObject::WorldObject(int x, int y, int vx, int vy, int width, int height, Uint8 r, Uint8 g, Uint8 b)
-    : x(x), y(y), vx(vx), vy(vy), width(width), height(height), color({ r, g, b }) {}
+WorldObject::WorldObject(int x, int y, int vx, int vy, int width, int height, Uint8 r, Uint8 g, Uint8 b, WorldObjectType objectType)
+    : x(x), y(y), vx(vx), vy(vy), width(width), height(height), color({ r, g, b }), objectType(objectType) {}
 
 int WorldObject::getX() const {
     return x;
@@ -42,4 +42,13 @@ void WorldObject::render(SDL_Renderer* renderer) const {
 
 bool WorldObject::checkBoundaryCollision() const {
     return x < 0 || x + width > SCREEN_WIDTH || y < 0 || y + height > SCREEN_HEIGHT;
+}
+
+WorldObjectType WorldObject::getObjectType() const {
+    return objectType;
+}
+
+//TODO
+bool WorldObject::collidesWith(int dx, int dy) {
+    return dx < x + width && dx > x && dy < y + height && dy > y;
 }

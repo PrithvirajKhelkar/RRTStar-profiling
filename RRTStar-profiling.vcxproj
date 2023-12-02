@@ -24,6 +24,7 @@
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="Robot.cpp" />
     <ClCompile Include="simpleRRTStar.cpp" />
+    <ClCompile Include="test.cpp" />
     <ClCompile Include="World.cpp" />
     <ClCompile Include="WorldObject.cpp" />
   </ItemGroup>
@@ -33,6 +34,7 @@
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="Robot.h" />
     <ClInclude Include="simpleRRTStar.h" />
+    <ClInclude Include="test.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="WorldObject.h" />
   </ItemGroup>

@@ -4,7 +4,7 @@
 std::mutex solutionMutex;
 
 Robot::Robot(int x, int y, int vx, int vy, int width, int height, Uint8 r, Uint8 g, Uint8 b)
-    : WorldObject(x, y, vx, vy, width, height, r, g, b) {
+    : WorldObject(x, y, vx, vy, width, height, r, g, b), isRunning(false) {
 
     isRunning = true;
 
@@ -14,6 +14,12 @@ Robot::Robot(int x, int y, int vx, int vy, int width, int height, Uint8 r, Uint8
 
 Robot::~Robot() {
     stopThread();
+}
+
+void Robot::initialize(std::vector<std::shared_ptr<WorldObject>> _allObjects) {
+    isRunning = true;
+
+    std::cout << "came here" << std::endl;
 }
 
 void Robot::solver() {
@@ -92,6 +98,11 @@ void Robot::stopThread() {
 void Robot::update(std::vector<std::shared_ptr<WorldObject>> allObjects) {
     // Implement robot-specific movement logic if needed
     // For now, the function is empty as an example
+    std::cout << "came here first" << std::endl;
+    if (!isRunning) {
+        std::cout << "came here second" << std::endl;
+        initialize(allObjects);
+    }
     
     setAllObjects(allObjects);
 

@@ -19,6 +19,8 @@ public:
 
     ~Robot();
 
+    void initialize(std::vector<std::shared_ptr<WorldObject>> _allObjects);
+
     void update(std::vector<std::shared_ptr<WorldObject>> allObjects) override;
 
     void solver();

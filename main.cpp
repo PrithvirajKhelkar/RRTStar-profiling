@@ -1,11 +1,12 @@
 #include "simpleRRTStar.h"
-#include "Engine.h"
+#include "PathEngine.h"
 
 int main()
 {
     // Example usage:
     //DrawRRTStarPath();
-    startEngine();
+    PathEngine engine;
+    engine.startEngine();
 
     return 0;
 }

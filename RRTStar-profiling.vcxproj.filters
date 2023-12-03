@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\BaseRobot">
+      <UniqueIdentifier>{52d32782-dd2b-4158-8959-8d82dcab4291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PathRobot">
+      <UniqueIdentifier>{9ce27a7f-1468-4c3c-a152-af4849b6ddf5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -21,49 +27,55 @@
     <ClCompile Include="simpleRRTStar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WorldObject.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Source Files\BaseRobot</Filter>
     </ClCompile>
     <ClCompile Include="Obstacle.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\BaseRobot</Filter>
     </ClCompile>
     <ClCompile Include="Robot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\BaseRobot</Filter>
     </ClCompile>
     <ClCompile Include="World.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\BaseRobot</Filter>
     </ClCompile>
-    <ClCompile Include="test.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="WorldObject.cpp">
+      <Filter>Source Files\BaseRobot</Filter>
+    </ClCompile>
+    <ClCompile Include="PathEngine.cpp">
+      <Filter>Source Files\PathRobot</Filter>
+    </ClCompile>
+    <ClCompile Include="PathRobot.cpp">
+      <Filter>Source Files\PathRobot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="simpleRRTStar.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="WorldObject.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="Engine.h">
+      <Filter>Source Files\BaseRobot</Filter>
     </ClInclude>
     <ClInclude Include="globals.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\BaseRobot</Filter>
     </ClInclude>
     <ClInclude Include="Obstacle.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\BaseRobot</Filter>
     </ClInclude>
     <ClInclude Include="Robot.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\BaseRobot</Filter>
     </ClInclude>
     <ClInclude Include="World.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\BaseRobot</Filter>
     </ClInclude>
-    <ClInclude Include="test.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="WorldObject.h">
+      <Filter>Source Files\BaseRobot</Filter>
+    </ClInclude>
+    <ClInclude Include="PathEngine.h">
+      <Filter>Source Files\PathRobot</Filter>
+    </ClInclude>
+    <ClInclude Include="PathRobot.h">
+      <Filter>Source Files\PathRobot</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

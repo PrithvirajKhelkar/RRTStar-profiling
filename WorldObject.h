@@ -30,7 +30,7 @@ public:
     WorldObjectType getObjectType() const;
 
     virtual void update(std::vector<std::shared_ptr<WorldObject>> allObjects) = 0;
-    virtual void render(SDL_Renderer* renderer) const;
+    virtual void render(SDL_Renderer* renderer);
 
     bool checkBoundaryCollision() const;
 

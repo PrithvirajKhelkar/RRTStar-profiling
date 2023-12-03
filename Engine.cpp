@@ -1,10 +1,11 @@
 #include "Engine.h"
 
-SDL_Window* window = nullptr;
-SDL_Renderer* renderer = nullptr;
-World world;
+Engine::Engine() {
+    window = nullptr;
+    renderer == nullptr;
+}
 
-bool initialize() {
+bool Engine::initialize() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         return false;
     }
@@ -26,13 +27,13 @@ bool initialize() {
     return true;
 }
 
-void close() {
+void Engine::close() {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
 
-void handleEvents(SDL_Event& e, bool& quit) {
+void Engine::handleEvents(SDL_Event& e, bool& quit) {
     while (SDL_PollEvent(&e) != 0) {
         if (e.type == SDL_QUIT) {
             quit = true;
@@ -41,7 +42,7 @@ void handleEvents(SDL_Event& e, bool& quit) {
 }
 
 
-void gameLoop() {
+void Engine::gameLoop() {
     SDL_Event e;
     bool quit = false;
 
@@ -49,22 +50,18 @@ void gameLoop() {
         handleEvents(e, quit);
         world.update();
         world.render(renderer);
-
         SDL_Delay(100);
     }
 }
 
-void startEngine() {
+void Engine::startEngine() {
     if (!initialize()) {
         std::cerr << "Failed to initialize!\n";
         close();
         return;
     }
 
-    world.addWorldObject(std::make_shared<Obstacle>(200, 100, 0, -2, OBSTACLE_WIDTH, OBSTACLE_HEIGHT, 255, 0, 0));
-    world.addWorldObject(std::make_shared<Obstacle>(400, 100, 0, 1, OBSTACLE_WIDTH, OBSTACLE_HEIGHT, 255, 0, 0));
-    
-    world.addWorldObject(std::make_shared<Robot>(10, 10, 0, 0, 10, 10, 0, 255, 0));
+    setupEngine();
 
     gameLoop();
     close();

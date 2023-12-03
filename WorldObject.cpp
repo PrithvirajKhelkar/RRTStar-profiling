@@ -34,7 +34,7 @@ int WorldObject::getHeight() const {
     return height;
 };
 
-void WorldObject::render(SDL_Renderer* renderer) const {
+void WorldObject::render(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
     SDL_Rect rect = { x, y, width, height };
     SDL_RenderFillRect(renderer, &rect);

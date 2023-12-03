@@ -48,7 +48,6 @@ WorldObjectType WorldObject::getObjectType() const {
     return objectType;
 }
 
-//TODO
 bool WorldObject::collidesWith(int dx, int dy) {
     return dx < x + width && dx > x && dy < y + height && dy > y;
 }

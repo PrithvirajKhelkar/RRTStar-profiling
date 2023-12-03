@@ -16,7 +16,7 @@
 
 class Robot : public WorldObject {
 public:
-    Robot(int x, int y, int vx, int vy, int width, int height, Uint8 r, Uint8 g, Uint8 b);
+    Robot(int x, int y, int vx, int vy, int width, int height, Uint8 r, Uint8 g, Uint8 b, int maxVelocity);
 
     ~Robot();
 
@@ -36,6 +36,7 @@ private:
     std::thread myThread;
     bool isRunning;
     std::vector<std::vector<int>> solution;
+    int maxVelocity;
 };
 
 #endif // ROBOT_H

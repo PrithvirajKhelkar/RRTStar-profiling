@@ -37,8 +37,8 @@ private:
     std::vector<std::shared_ptr<WorldObject>> obstacles;
 };
 
-Robot::Robot(int x, int y, int vx, int vy, int width, int height, Uint8 r, Uint8 g, Uint8 b)
-    : WorldObject(x, y, vx, vy, width, height, r, g, b, ROBOT), isRunning(false) {}
+Robot::Robot(int x, int y, int vx, int vy, int width, int height, Uint8 r, Uint8 g, Uint8 b, int maxVelocity)
+    : WorldObject(x, y, vx, vy, width, height, r, g, b, ROBOT), isRunning(false), maxVelocity(maxVelocity) {}
 
 Robot::~Robot() {
     stopThread();
@@ -85,25 +85,31 @@ void Robot::solver() {
             
             ompl::base::PlannerStatus solved = simpleSetup->solve();
 
-            ompl::geometric::PathGeometric& path = simpleSetup->getSolutionPath();
+            if (solved) {
 
-            path.interpolate();
+                ompl::geometric::PathGeometric& path = simpleSetup->getSolutionPath();
 
-            // Lock the mutex before modifying the shared resource (solution vector)
-            std::lock_guard<std::mutex> lock(solutionMutex);
+                path.interpolate();
 
-            solution.clear();
+                // Lock the mutex before modifying the shared resource (solution vector)
+                std::lock_guard<std::mutex> lock(solutionMutex);
 
-            for (std::size_t i = 0; i < path.getStateCount(); ++i) {
-                if (!simpleSetup->getStateValidityChecker()->isValid(path.getState(i))) {
-                    simpleSetup->clear();
-                    break;
+                solution.clear();
+
+                for (std::size_t i = 0; i < path.getStateCount(); ++i) {
+                    if (!simpleSetup->getStateValidityChecker()->isValid(path.getState(i))) {
+                        simpleSetup->clear();
+                        break;
+                    }
+
+                    solution.push_back({ static_cast<int>(path.getState(i)->as<ompl::base::RealVectorStateSpace::StateType>()->values[0]),
+                                        static_cast<int>(path.getState(i)->as<ompl::base::RealVectorStateSpace::StateType>()->values[1]) });
                 }
 
-                solution.push_back({static_cast<int>(path.getState(i)->as<ompl::base::RealVectorStateSpace::StateType>()->values[0]),
-                                    static_cast<int>(path.getState(i)->as<ompl::base::RealVectorStateSpace::StateType>()->values[1])});
             }
-
+            else {
+                std::cout << "No solution found" << std::endl;
+            }
         }
         catch (const std::exception& e) {
             std::cerr << "Exception: " << e.what() << std::endl;
@@ -129,6 +135,22 @@ void Robot::update(std::vector<std::shared_ptr<WorldObject>> allObjects) {
     if (!isRunning) {
         initialize(allObjects);
     }
+
+    /*
+    
+    if (solution.size() >= 3) {
+
+        x = solution[2][0];
+        y = solution[2][1];
+
+        ompl::base::ScopedState<> start(simpleSetup->getStateSpace());
+        start[0] = getX();
+        start[1] = getY();
+
+        simpleSetup->setStartState(start);
+
+    }
+    */
 }
 
 void Robot::render(SDL_Renderer* renderer) const {

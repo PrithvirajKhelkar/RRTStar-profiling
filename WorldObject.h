@@ -34,7 +34,7 @@ public:
 
     bool checkBoundaryCollision() const;
 
-    bool collidesWith(int dx, int dy);
+    bool collidesWith(int xPos, int yPos, int dx = 0, int dy = 0);
 
 protected:
     WorldObjectType objectType;

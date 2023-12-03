@@ -5,6 +5,7 @@
 #include <thread>
 #include <chrono>
 #include <iostream>
+#include <unordered_map>
 
 #include "WorldObject.h"
 
@@ -43,7 +44,7 @@ public:
 private:
     std::thread myThread;
     bool isRunning;
-    int maxVelocity;
+    
 
 protected:
     std::shared_ptr<ompl::geometric::SimpleSetup> simpleSetup;

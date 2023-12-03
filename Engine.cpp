@@ -50,7 +50,7 @@ void Engine::gameLoop() {
         handleEvents(e, quit);
         world.update();
         world.render(renderer);
-        SDL_Delay(100);
+        SDL_Delay(DELTA_TIME);
     }
 }
 

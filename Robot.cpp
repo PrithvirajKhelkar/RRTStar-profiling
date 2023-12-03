@@ -1,28 +1,59 @@
 #include "Robot.h"
-#include <mutex>
 
-std::mutex solutionMutex;
+double solverTime;
 
 class RobotValidityChecker : public ompl::base::StateValidityChecker {
 public:
     RobotValidityChecker(const ompl::base::SpaceInformationPtr& si, std::vector<std::shared_ptr<WorldObject>> obstacles)
-        : ompl::base::StateValidityChecker(si), obstacles(obstacles) {}
+        : ompl::base::StateValidityChecker(si), obstacles(obstacles) {
+        for (auto& obstacle : obstacles) {
+            if (obstacle->getObjectType() == OBSTACLE) {
+                obstacleMap[obstacle.get()]["x"] = obstacle->getX();
+                obstacleMap[obstacle.get()]["y"] = obstacle->getY();
+                obstacleMap[obstacle.get()]["isColliding"] = false;
+            }
+        }
+    }
 
     bool isValid(const ompl::base::State* state) const override {
         // Check validity with respect to all obstacles
-        const int dx = std::min(static_cast<int>(state->as<ompl::base::RealVectorStateSpace::StateType>()->values[0]), SCREEN_WIDTH);
-        const int dy = std::min(static_cast<int>(state->as<ompl::base::RealVectorStateSpace::StateType>()->values[1]), SCREEN_HEIGHT);
+        const int stateX = std::min(static_cast<int>(state->as<ompl::base::RealVectorStateSpace::StateType>()->values[0]), SCREEN_WIDTH);
+        const int stateY = std::min(static_cast<int>(state->as<ompl::base::RealVectorStateSpace::StateType>()->values[1]), SCREEN_HEIGHT);
 
         for (const auto& obstacle : obstacles) {
-            if (obstacle->getObjectType() == OBSTACLE && obstacle->collidesWith(dx, dy)) {
-                return false; // Collision with obstacle
-            }
+            if (obstacle->getObjectType() == OBSTACLE) {
+                int prevOx = obstacleMap[obstacle.get()]["x"];
+                int prevOy = obstacleMap[obstacle.get()]["y"];
+
+                int oX = obstacle->getX();
+                int oY = obstacle->getY();
+
+                if (prevOx != oX || prevOy != oY) {
+
+                    std::cout << solverTime << std::endl;
+
+                    // observed velocities
+                    int dVx = oX - prevOx;
+                    int dVy = oY - prevOy;
+
+                    bool collides = obstacle->collidesWith(stateX, stateY);
+                    obstacleMap[obstacle.get()]["isColliding"] = collides;
+
+                    if (collides) return false;
+                
+                }
+                else {
+                    if (obstacleMap[obstacle.get()]["isColliding"]) return false;
+                }
+
+            }   
         }
         return true; // State is valid
     }
 
 private:
     std::vector<std::shared_ptr<WorldObject>> obstacles;
+    mutable std::unordered_map<const WorldObject*, std::unordered_map<std::string, int>> obstacleMap;
 };
 
 Robot::Robot(int x, int y, int vx, int vy, int width, int height, Uint8 r, Uint8 g, Uint8 b)
@@ -65,8 +96,11 @@ void Robot::solver() {
     while (isRunning) {
         try {
             ompl::base::PlannerStatus solved = simpleSetup->solve();
+            
             if (solved) {
+                solverTime = simpleSetup->getLastPlanComputationTime();
                 onSolutionFound();
+
             }
             else {
                 std::cout << "No solution found" << std::endl;

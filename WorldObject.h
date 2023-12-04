@@ -34,7 +34,9 @@ public:
 
     bool checkBoundaryCollision() const;
 
-    bool collidesWith(int xPos, int yPos, int dx = 0, int dy = 0);
+    bool collidesWith(std::shared_ptr<WorldObject> otherObject, int xPos = 0, int yPos = 0, int dx = 0, int dy = 0);
+
+    bool isMovable();
 
 protected:
     WorldObjectType objectType;
@@ -42,6 +44,7 @@ protected:
     int vx, vy;
     int width, height;
     SDL_Color color;
+    bool movable;
 };
 
 #endif // WORLD_OBJECT_H

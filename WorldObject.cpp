@@ -1,7 +1,7 @@
 #include "WorldObject.h"
 
 WorldObject::WorldObject(int x, int y, int vx, int vy, int width, int height, Uint8 r, Uint8 g, Uint8 b, WorldObjectType objectType)
-    : x(x), y(y), vx(vx), vy(vy), width(width), height(height), color({ r, g, b }), objectType(objectType) {}
+    : x(x), y(y), vx(vx), vy(vy), width(width), height(height), color({ r, g, b }), objectType(objectType), movable(vx != 0 && vy != 0) {}
 
 int WorldObject::getX() const {
     return x;
@@ -48,6 +48,10 @@ WorldObjectType WorldObject::getObjectType() const {
     return objectType;
 }
 
-bool WorldObject::collidesWith(int xPos, int yPos, int dx, int dy) {
+bool WorldObject::collidesWith(std::shared_ptr<WorldObject> otherObject, int xPos, int yPos, int dx, int dy) {
     return xPos < x + dx + width && xPos > x + dx && yPos < y + dy + height && yPos > y + dy;
+}
+
+bool WorldObject::isMovable() {
+    return movable;
 }

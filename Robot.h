@@ -9,6 +9,7 @@
 
 #include "WorldObject.h"
 
+#include "Obstacle.h"
 #include <ompl/base/spaces/RealVectorStateSpace.h>
 #include <ompl/geometric/SimpleSetup.h>
 #include <ompl/geometric/planners/rrt/RRTstar.h>
@@ -42,7 +43,7 @@ public:
     virtual void renderRobot(SDL_Renderer* renderer) = 0;
 
 private:
-    std::thread myThread;
+    std::thread robotThread;
     bool isRunning;
     
 

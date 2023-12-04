@@ -49,6 +49,9 @@ void Engine::gameLoop() {
     while (!quit) {
         handleEvents(e, quit);
         world.update();
+
+        
+
         world.render(renderer);
         SDL_Delay(DELTA_TIME);
     }

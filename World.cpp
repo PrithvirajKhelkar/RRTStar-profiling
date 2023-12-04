@@ -13,7 +13,7 @@ void World::update() {
 }
 
 void World::render(SDL_Renderer* renderer) {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 76, 86, 105, 255);
     SDL_RenderClear(renderer);
 
     for (const auto& object : sceneObjects) {

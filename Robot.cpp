@@ -12,6 +12,9 @@ public:
                 obstacleMap[obstacle.get()]["y"] = obstacle->getY();
                 obstacleMap[obstacle.get()]["isColliding"] = false;
             }
+            else if (obstacle->getObjectType() == ROBOT) {
+                robot = obstacle;
+            }
         }
     }
 
@@ -28,7 +31,7 @@ public:
                 int oX = obstacle->getX();
                 int oY = obstacle->getY();
 
-                if (prevOx != oX || prevOy != oY) {
+                if (!obstacle->isMovable() || prevOx != oX || prevOy != oY) {
 
                     std::cout << solverTime << std::endl;
 
@@ -36,11 +39,13 @@ public:
                     int dVx = oX - prevOx;
                     int dVy = oY - prevOy;
 
-                    bool collides = obstacle->collidesWith(stateX, stateY);
-                    obstacleMap[obstacle.get()]["isColliding"] = collides;
+                    if (robot) {
+                        bool collides = obstacle->collidesWith(robot, stateX, stateY);
+                        obstacleMap[obstacle.get()]["isColliding"] = collides;
 
-                    if (collides) return false;
-                
+                        if (collides) return false;
+                    }
+                  
                 }
                 else {
                     if (obstacleMap[obstacle.get()]["isColliding"]) return false;
@@ -52,6 +57,7 @@ public:
     }
 
 private:
+    std::shared_ptr<WorldObject> robot;
     std::vector<std::shared_ptr<WorldObject>> obstacles;
     mutable std::unordered_map<const WorldObject*, std::unordered_map<std::string, int>> obstacleMap;
 };
@@ -113,14 +119,14 @@ void Robot::solver() {
 }
 
 void Robot::startThread() {
-    myThread = std::thread(&Robot::solver, this);
+    robotThread = std::thread(&Robot::solver, this);
 }
 
 void Robot::stopThread() {
     isRunning = false;
 
-    if (myThread.joinable()) {
-        myThread.join();
+    if (robotThread.joinable()) {
+        robotThread.join();
     }
 }
 

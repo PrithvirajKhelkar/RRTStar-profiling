@@ -54,10 +54,10 @@ void PathRobot::renderRobot(SDL_Renderer* renderer) {
 
     if (temp.size()) {
         for (std::vector<int> coord : temp) {
-            SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
+            SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 120);
             SDL_Rect rect = { coord[0],
                               coord[1],
-                              1, 1 };
+                              4, 4 };
             SDL_RenderFillRect(renderer, &rect);
         }
     }

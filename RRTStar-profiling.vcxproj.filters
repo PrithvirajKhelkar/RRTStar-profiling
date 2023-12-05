@@ -48,6 +48,9 @@
     <ClCompile Include="PathRobot.cpp">
       <Filter>Source Files\PathRobot</Filter>
     </ClCompile>
+    <ClCompile Include="armRRTStar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="simpleRRTStar.h">
@@ -77,5 +80,11 @@
     <ClInclude Include="PathRobot.h">
       <Filter>Source Files\PathRobot</Filter>
     </ClInclude>
+    <ClInclude Include="armRRTStar.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
 </Project>

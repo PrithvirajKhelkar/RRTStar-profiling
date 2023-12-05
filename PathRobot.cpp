@@ -1,6 +1,9 @@
 #include "PathRobot.h"
 
 
+int total = 0;
+int failure = 0;
+
 PathRobot::PathRobot(int x, int y, int vx, int vy, int width, int height, Uint8 r, Uint8 g, Uint8 b)
     : Robot(x, y, vx, vy, width, height, r, g, b) {}
 
@@ -19,6 +22,8 @@ void PathRobot::setGoalState() {
 };
 
 void PathRobot::onSolutionFound() {
+
+    total++;
     ompl::geometric::PathGeometric& path = simpleSetup->getSolutionPath();
 
     path.interpolate();
@@ -30,6 +35,7 @@ void PathRobot::onSolutionFound() {
 
     for (std::size_t i = 0; i < path.getStateCount(); ++i) {
         if (!simpleSetup->getStateValidityChecker()->isValid(path.getState(i))) {
+            failure++;
             simpleSetup->clear();
             break;
         }
@@ -45,6 +51,8 @@ void PathRobot::updateRobot() {
 
 void PathRobot::renderRobot(SDL_Renderer* renderer) {
     std::vector<std::vector<int>> temp(solution);
+
+    std::cout << "Total: " << total << "   , failures : " << failure << " delta time: " << DELTA_TIME << std::endl;
 
     // Lock the mutex before accessing the shared resource (solution vector)
     {

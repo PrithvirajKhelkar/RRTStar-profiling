@@ -2,6 +2,7 @@
 
 double solverTime;
 
+
 class RobotValidityChecker : public ompl::base::StateValidityChecker {
 public:
     RobotValidityChecker(const ompl::base::SpaceInformationPtr& si, std::vector<std::shared_ptr<WorldObject>> obstacles)
@@ -33,7 +34,7 @@ public:
 
                 if (!obstacle->isMovable() || prevOx != oX || prevOy != oY) {
 
-                    std::cout << solverTime << std::endl;
+                    //std::cout << solverTime << std::endl;
 
                     // observed velocities
                     int dVx = oX - prevOx;

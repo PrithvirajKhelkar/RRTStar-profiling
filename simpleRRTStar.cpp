@@ -89,18 +89,23 @@ double planAndVisualizePath(const std::string& imagePath, int start_x, int start
 void DrawRRTStarPath()
 {
     // Example usage:
-    std::string imagePath = "inputs/map.png";
-    int start_x = 20;
-    int start_y = 20;
-    int goal_x = 780;
-    int goal_y = 560;
-    std::string outputPath = "outputs/path_result_function.jpg";
+    for (int i = 1; i <= 9; i++) {
 
-    double distance = planAndVisualizePath(imagePath, start_x, start_y, goal_x, goal_y, outputPath);
+        std::string imagePath = "inputs/img_" + std::to_string(i) + ".png";
+        int start_x = 20;
+        int start_y = 20;
 
-    if (distance >= 0.0)
-        std::cout << "Path planning successful. Result saved as " << outputPath << std::endl
-        << "Total Distance Covered: " << distance << std::endl;
-    else
-        std::cerr << "Path planning failed." << std::endl;
+        int goal_x = 780;
+        int goal_y = 560;
+        std::string outputPath = "outputs/test.jpg";
+
+        double distance = planAndVisualizePath(imagePath, start_x, start_y, goal_x, goal_y, outputPath);
+
+        if (distance >= 0.0)
+            std::cout << "Path planning successful. Result saved as " << outputPath << std::endl
+            << "Total Distance Covered: " << distance << std::endl;
+        else
+            std::cerr << "Path planning failed." << std::endl;
+
+    }
 }
